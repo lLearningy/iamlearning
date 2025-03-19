@@ -409,8 +409,6 @@ end)
 
 
 
-
-
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer -- Use LocalPlayer directly
 
